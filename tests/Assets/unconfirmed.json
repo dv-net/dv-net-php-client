@@ -1,0 +1,22 @@
+{
+  "unconfirmed_amount": "100",
+  "unconfirmed_created_at": "2025-01-31T07:21:32.292335839+03:00",
+  "unconfirmed_paid_at": "2025-01-31T07:21:32.292335839+03:00",
+  "unconfirmed_status": "completed",
+  "unconfirmed_transactions": {
+    "unconfirmed_amount": "100",
+    "unconfirmed_amount_usd": "100",
+    "unconfirmed_bc_uniq_key": "bc_uniq_key_example",
+    "unconfirmed_blockchain": "bitcoin",
+    "unconfirmed_created_at": "2025-01-31T07:21:32.292335839+03:00",
+    "unconfirmed_currency": "BTC",
+    "unconfirmed_currency_id": "BTC.Bitcoin",
+    "unconfirmed_tx_hash": "tx_hash_example",
+    "unconfirmed_tx_id": "f35699e8-e894-454a-b32e-405b708f464c"
+  },
+  "unconfirmed_type": "PaymentReceived",
+  "unconfirmed_wallet": {
+    "unconfirmed_id": "e24e5539-e207-4536-b529-06e2bccc187c",
+    "unconfirmed_store_external_id": "store_external_example"
+  }
+}

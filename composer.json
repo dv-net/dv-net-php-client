@@ -1,0 +1,22 @@
+{
+    "name": "dv-net/dv-net-php-client",
+    "description": "A convenient way to integrate DV.net to your platform",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "DvNet\\DvNetClient\\": "src/"
+        }
+    },
+    "require": {
+        "php": "^8.1",
+        "psr/http-client": "^1.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.68",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^11.5",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "spaze/phpstan-disallowed-calls": "^4.4"
+    }
+}

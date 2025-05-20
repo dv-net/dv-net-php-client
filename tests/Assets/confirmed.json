@@ -1,0 +1,22 @@
+{
+  "amount": "100",
+  "created_at": "2025-01-31T07:21:32.292335839+03:00",
+  "paid_at": "2025-01-31T07:21:32.292335839+03:00",
+  "status": "completed",
+  "transactions": {
+    "amount": "100",
+    "amount_usd": "100",
+    "bc_uniq_key": "bc_uniq_key_example",
+    "blockchain": "bitcoin",
+    "created_at": "2025-01-31T07:21:32.292335839+03:00",
+    "currency": "BTC",
+    "currency_id": "BTC.Bitcoin",
+    "tx_hash": "tx_hash_example",
+    "tx_id": "f35699e8-e894-454a-b32e-405b708f464c"
+  },
+  "type": "PaymentReceived",
+  "wallet": {
+    "id": "e24e5539-e207-4536-b529-06e2bccc187c",
+    "store_external_id": "store_external_example"
+  }
+}
