@@ -275,6 +275,7 @@ class MerchantClient
         $currencies = [];
         foreach ($json['data'] as $data) {
             $currencies[] = new CurrencyDto(
+                $data['id'],
                 $data['blockchain'],
                 $data['code'],
                 $data['contract_address'],
