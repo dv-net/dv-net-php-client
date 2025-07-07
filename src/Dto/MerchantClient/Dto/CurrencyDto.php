@@ -7,6 +7,7 @@ namespace DvNet\DvNetClient\Dto\MerchantClient\Dto;
 class CurrencyDto
 {
     public function __construct(
+        public readonly string $id,
         public readonly string $blockchain,
         public readonly string $code,
         public readonly string $contractAddress,
