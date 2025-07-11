@@ -1,10 +1,9 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient\Exceptions;
 
-use DvNet\DvNetClient\Exceptions\DvNetRuntimeException;
 use Psr\Http\Client\RequestExceptionInterface;
 use Psr\Http\Message\RequestInterface;
 use Throwable;

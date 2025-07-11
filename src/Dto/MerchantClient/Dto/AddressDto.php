@@ -1,10 +1,8 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient\Dto\MerchantClient\Dto;
-
-use DateTimeImmutable;
 
 class AddressDto
 {

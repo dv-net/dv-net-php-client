@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient\SimpleHttp;
 
@@ -11,16 +11,16 @@ use Psr\Http\Message\StreamInterface;
 class Response implements ResponseInterface
 {
     private string $protocolVersion;
-    /** @var array<string, mixed>  */
+    /** @var array<string, string[]>  */
     private array $headers = [];
-    /** @var array<string, mixed>  */
+    /** @var array<string, string> */
     private array $headerNames = [];
     private StreamInterface $body;
     private int $statusCode;
     private string $reasonPhrase;
 
     /**
-     * @param array<string, mixed> $headers
+     * @param array<string, string|string[]> $headers
      */
     public function __construct(
         int $statusCode = 200,
@@ -29,20 +29,20 @@ class Response implements ResponseInterface
         string $protocolVersion = '1.1',
         string $reasonPhrase = ''
     ) {
-        $this->statusCode      = $statusCode;
-        $this->body            = $body ?? new Stream(fopen('php://temp', 'r+'));
+        $this->statusCode = $statusCode;
+        $this->body = $body ?? new Stream(fopen('php://temp', 'r+'));
         $this->protocolVersion = $protocolVersion;
-        $this->reasonPhrase    = $reasonPhrase;
+        $this->reasonPhrase = $reasonPhrase;
 
         foreach ($headers as $name => $value) {
-            $value      = (array) $value;
+            $value = (array) $value;
             $normalized = strtolower($name);
             if (isset($this->headerNames[$normalized])) {
                 $originalName = $this->headerNames[$normalized];
                 unset($this->headers[$originalName]);
             }
             $this->headerNames[$normalized] = $name;
-            $this->headers[$name]           = $value;
+            $this->headers[$name] = $value;
         }
     }
 
@@ -57,7 +57,7 @@ class Response implements ResponseInterface
             return $this;
         }
 
-        $new                  = clone $this;
+        $new = clone $this;
         $new->protocolVersion = $version;
 
         return $new;
@@ -92,7 +92,7 @@ class Response implements ResponseInterface
 
     public function withHeader(string $name, $value): MessageInterface
     {
-        $value      = (array) $value;
+        $value = (array) $value;
         $normalized = strtolower($name);
 
         $new = clone $this;
@@ -103,24 +103,24 @@ class Response implements ResponseInterface
         }
 
         $new->headerNames[$normalized] = $name;
-        $new->headers[$name]           = $value;
+        $new->headers[$name] = $value;
 
         return $new;
     }
 
     public function withAddedHeader(string $name, $value): MessageInterface
     {
-        $value      = (array) $value;
+        $values = (array) $value;
         $normalized = strtolower($name);
 
         $new = clone $this;
 
         if (isset($new->headerNames[$normalized])) {
-            $originalName                = $new->headerNames[$normalized];
-            $new->headers[$originalName] = array_merge($new->headers[$originalName], $value);
+            $originalName = $new->headerNames[$normalized];
+            $new->headers[$originalName] = array_merge($new->headers[$originalName], $values);
         } else {
             $new->headerNames[$normalized] = $name;
-            $new->headers[$name]           = $value;
+            $new->headers[$name] = $values;
         }
 
         return $new;
@@ -134,7 +134,7 @@ class Response implements ResponseInterface
             return $this;
         }
 
-        $new          = clone $this;
+        $new = clone $this;
         $originalName = $new->headerNames[$normalized];
         unset($new->headers[$originalName]);
         unset($new->headerNames[$normalized]);
@@ -153,7 +153,7 @@ class Response implements ResponseInterface
             return $this;
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->body = $body;
 
         return $new;
@@ -170,8 +170,8 @@ class Response implements ResponseInterface
             return $this;
         }
 
-        $new               = clone $this;
-        $new->statusCode   = $code;
+        $new = clone $this;
+        $new->statusCode = $code;
         $new->reasonPhrase = $reasonPhrase;
 
         return $new;
