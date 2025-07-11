@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient\Exceptions;
 
@@ -12,9 +12,9 @@ class DvNetNetworkException extends DvNetRuntimeException implements NetworkExce
 {
     private RequestInterface $request;
 
-    public function __construct(string $message, RequestInterface $request, ?Throwable $previous = null)
+    public function __construct(string $message, RequestInterface $request, int $code, ?Throwable $previous = null)
     {
-        parent::__construct($message, 0, $previous);
+        parent::__construct(message: $message, code: $code, previous: $previous);
         $this->request = $request;
     }
 

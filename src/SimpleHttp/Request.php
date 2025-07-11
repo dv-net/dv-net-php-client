@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient\SimpleHttp;
 
@@ -13,16 +13,16 @@ class Request implements RequestInterface
 {
     private string $method;
     private UriInterface $uri;
-    /** @var array<string, mixed> */
+    /** @var array<string, string[]> */
     private array $headers = [];
-    /** @var array<string, mixed> */
+    /** @var array<string, string> */
     private array $headerNames = [];
     private StreamInterface $body;
     private string $protocolVersion;
     private ?string $requestTarget = null;
 
     /**
-     * @param array<string, mixed> $headers
+     * @param array<string, string|string[]> $headers
      */
     public function __construct(
         string $method,
@@ -31,20 +31,20 @@ class Request implements RequestInterface
         ?StreamInterface $body = null,
         string $protocolVersion = '1.1'
     ) {
-        $this->method          = $method;
-        $this->uri             = $uri;
-        $this->body            = $body ?? new Stream(fopen('php://temp', 'r+'));
+        $this->method = $method;
+        $this->uri = $uri;
+        $this->body = $body ?? new Stream(fopen('php://temp', 'r+'));
         $this->protocolVersion = $protocolVersion;
 
         foreach ($headers as $name => $value) {
-            $value      = (array) $value;
+            $value = (array) $value;
             $normalized = strtolower($name);
             if (isset($this->headerNames[$normalized])) {
                 $originalName = $this->headerNames[$normalized];
                 unset($this->headers[$originalName]);
             }
             $this->headerNames[$normalized] = $name;
-            $this->headers[$name]           = $value;
+            $this->headers[$name] = $value;
         }
     }
 
@@ -59,7 +59,7 @@ class Request implements RequestInterface
             return $this;
         }
 
-        $new                  = clone $this;
+        $new = clone $this;
         $new->protocolVersion = $version;
 
         return $new;
@@ -94,7 +94,7 @@ class Request implements RequestInterface
 
     public function withHeader(string $name, $value): MessageInterface
     {
-        $value      = (array) $value;
+        $value = (array) $value;
         $normalized = strtolower($name);
 
         $new = clone $this;
@@ -105,24 +105,24 @@ class Request implements RequestInterface
         }
 
         $new->headerNames[$normalized] = $name;
-        $new->headers[$name]           = $value;
+        $new->headers[$name] = $value;
 
         return $new;
     }
 
     public function withAddedHeader(string $name, $value): MessageInterface
     {
-        $value      = (array) $value;
+        $value = (array) $value;
         $normalized = strtolower($name);
 
         $new = clone $this;
 
         if (isset($new->headerNames[$normalized])) {
-            $originalName                = $new->headerNames[$normalized];
+            $originalName = $new->headerNames[$normalized];
             $new->headers[$originalName] = array_merge($new->headers[$originalName], $value);
         } else {
             $new->headerNames[$normalized] = $name;
-            $new->headers[$name]           = $value;
+            $new->headers[$name] = $value;
         }
 
         return $new;
@@ -136,7 +136,7 @@ class Request implements RequestInterface
             return $this;
         }
 
-        $new          = clone $this;
+        $new = clone $this;
         $originalName = $new->headerNames[$normalized];
         unset($new->headers[$originalName]);
         unset($new->headerNames[$normalized]);
@@ -155,7 +155,7 @@ class Request implements RequestInterface
             return $this;
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->body = $body;
 
         return $new;
@@ -186,7 +186,7 @@ class Request implements RequestInterface
             return $this;
         }
 
-        $new                = clone $this;
+        $new = clone $this;
         $new->requestTarget = $requestTarget;
 
         return $new;
@@ -203,7 +203,7 @@ class Request implements RequestInterface
             return $this;
         }
 
-        $new         = clone $this;
+        $new = clone $this;
         $new->method = $method;
 
         return $new;
@@ -220,7 +220,7 @@ class Request implements RequestInterface
             return $this;
         }
 
-        $new      = clone $this;
+        $new = clone $this;
         $new->uri = $uri;
 
         if (!$preserveHost) {

@@ -7,6 +7,6 @@ includes:
     - vendor/spaze/phpstan-disallowed-calls/extension.neon
 
 parameters:
-	level: 8
+	level: max
 	paths:
 		- src

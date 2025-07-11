@@ -38,8 +38,8 @@ $client = new MerchantClient(
 Verify the authenticity of request signatures:
 
 ```php
-$hashManager = new HashManager();
-$isValid = $hashManager->checkSign(
+$merchantUtilsManager = new MerchantUtilsManager();
+$isValid = $merchantUtilsManager->checkSign(
     clientSignature: 'received-signature-hash',
     clientKey: 'your-client-key',
     requestBody: ['data' => 'request-payload']
