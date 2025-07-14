@@ -285,7 +285,7 @@ class MerchantClient
             $response = $this->httpClient->sendRequest($request);
         } catch (NetworkExceptionInterface $exception) {
             throw new DvNetNetworkException(
-                message: 'Client error, got response: ' . $exception->getMessage() . ' and code ' . $exception->getCode(),
+                message: 'Network error, got response: ' . $exception->getMessage() . ' and code ' . $exception->getCode(),
                 request: $request,
                 code: $exception->getCode(),
                 previous: $exception,
@@ -299,7 +299,7 @@ class MerchantClient
             );
         } catch (ClientExceptionInterface $exception) {
             throw new DvNetServerException(
-                message: 'Server error, got response: ' . $exception->getMessage() . ' and code ' . $exception->getCode(),
+                message: 'Client error, got response: ' . $exception->getMessage() . ' and code ' . $exception->getCode(),
                 request: $request,
                 code: $exception->getCode(),
                 previous: $exception,
@@ -309,7 +309,7 @@ class MerchantClient
         $this->checkOkResponse(response: $response, request: $request);
 
         try {
-            $json = json_decode(json: $response->getBody()->getContents(), associative: true, flags: JSON_THROW_ON_ERROR);
+            $json = json_decode(json: (string) $response->getBody(), associative: true, flags: JSON_THROW_ON_ERROR);
         } catch (JsonException $exception) {
             throw new DvNetInvalidResponseDataException('Invalid json.', previous: $exception);
         }
