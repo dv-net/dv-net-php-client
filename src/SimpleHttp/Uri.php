@@ -1,20 +1,20 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient\SimpleHttp;
 
-use Psr\Http\Message\UriInterface;
 use InvalidArgumentException;
+use Psr\Http\Message\UriInterface;
 
 class Uri implements UriInterface
 {
-    private string $scheme   = '';
+    private string $scheme = '';
     private string $userInfo = '';
-    private string $host     = '';
-    private ?int $port       = null;
-    private string $path     = '';
-    private string $query    = '';
+    private string $host = '';
+    private ?int $port = null;
+    private string $path = '';
+    private string $query = '';
     private string $fragment = '';
 
     public function __construct(string $uri = '')
@@ -24,24 +24,30 @@ class Uri implements UriInterface
         }
     }
 
-    private function parseUri(string $uri): void
+    public function __toString(): string
     {
-        $components = parse_url($uri);
+        $uri = '';
 
-        if ($components === false) {
-            throw new InvalidArgumentException('Unable to parse URI: ' . $uri);
+        if ($this->scheme !== '') {
+            $uri .= $this->scheme . ':';
         }
 
-        $this->scheme   = isset($components['scheme']) ? strtolower($components['scheme']) : '';
-        $this->host     = isset($components['host']) ? strtolower($components['host']) : '';
-        $this->port     = $components['port'] ?? null;
-        $this->path     = $components['path'] ?? '';
-        $this->query    = $components['query'] ?? '';
-        $this->fragment = $components['fragment'] ?? '';
-        $this->userInfo = $components['user'] ?? '';
-        if (isset($components['pass'])) {
-            $this->userInfo .= ':' . $components['pass'];
+        $authority = $this->getAuthority();
+        if ($authority !== '') {
+            $uri .= '//' . $authority;
         }
+
+        $uri .= $this->path;
+
+        if ($this->query !== '') {
+            $uri .= '?' . $this->query;
+        }
+
+        if ($this->fragment !== '') {
+            $uri .= '#' . $this->fragment;
+        }
+
+        return $uri;
     }
 
     public function getScheme(): string
@@ -101,7 +107,7 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $new         = clone $this;
+        $new = clone $this;
         $new->scheme = $scheme;
 
         return $new;
@@ -118,7 +124,7 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $new           = clone $this;
+        $new = clone $this;
         $new->userInfo = $userInfo;
 
         return $new;
@@ -131,7 +137,7 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->host = $host;
 
         return $new;
@@ -143,7 +149,7 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->port = $port;
 
         return $new;
@@ -155,7 +161,7 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $new       = clone $this;
+        $new = clone $this;
         $new->path = $path;
 
         return $new;
@@ -167,7 +173,7 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $new        = clone $this;
+        $new = clone $this;
         $new->query = $query;
 
         return $new;
@@ -179,35 +185,29 @@ class Uri implements UriInterface
             return $this;
         }
 
-        $new           = clone $this;
+        $new = clone $this;
         $new->fragment = $fragment;
 
         return $new;
     }
 
-    public function __toString(): string
+    private function parseUri(string $uri): void
     {
-        $uri = '';
+        $components = parse_url($uri);
 
-        if ($this->scheme !== '') {
-            $uri .= $this->scheme . ':';
+        if ($components === false) {
+            throw new InvalidArgumentException('Unable to parse URI: ' . $uri);
         }
 
-        $authority = $this->getAuthority();
-        if ($authority !== '') {
-            $uri .= '//' . $authority;
+        $this->scheme = isset($components['scheme']) ? strtolower($components['scheme']) : '';
+        $this->host = isset($components['host']) ? strtolower($components['host']) : '';
+        $this->port = $components['port'] ?? null;
+        $this->path = $components['path'] ?? '';
+        $this->query = $components['query'] ?? '';
+        $this->fragment = $components['fragment'] ?? '';
+        $this->userInfo = $components['user'] ?? '';
+        if (isset($components['pass'])) {
+            $this->userInfo .= ':' . $components['pass'];
         }
-
-        $uri .= $this->path;
-
-        if ($this->query !== '') {
-            $uri .= '?' . $this->query;
-        }
-
-        if ($this->fragment !== '') {
-            $uri .= '#' . $this->fragment;
-        }
-
-        return $uri;
     }
 }

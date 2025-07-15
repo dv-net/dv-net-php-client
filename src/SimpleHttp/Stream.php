@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient\SimpleHttp;
 
@@ -15,7 +15,7 @@ class Stream implements StreamInterface
     private bool $readable;
     private bool $writable;
     private ?int $size;
-    /** @var array<string, mixed>  */
+    /** @var array{uri?: string} */
     private array $metadata;
 
     /**
@@ -27,12 +27,12 @@ class Stream implements StreamInterface
             throw new RuntimeException('Stream must be a resource');
         }
 
-        $this->stream   = $stream;
+        $this->stream = $stream;
         $this->metadata = stream_get_meta_data($this->stream);
         $this->seekable = $this->metadata['seekable'];
         $this->readable = str_contains($this->metadata['mode'], 'r') || str_contains($this->metadata['mode'], '+');
         $this->writable = str_contains($this->metadata['mode'], 'w') || str_contains($this->metadata['mode'], 'a') || str_contains($this->metadata['mode'], '+');
-        $this->size     = null;
+        $this->size = null;
     }
 
     public function __destruct()
@@ -67,7 +67,7 @@ class Stream implements StreamInterface
 
         $result = $this->stream;
         unset($this->stream);
-        $this->size     = null;
+        $this->size = null;
         $this->seekable = false;
         $this->readable = false;
         $this->writable = false;
@@ -87,7 +87,7 @@ class Stream implements StreamInterface
         }
 
         // Clear the stat cache if the stream has been modified
-        clearstatcache(true, $this->metadata['uri']);
+        clearstatcache(true, $this->metadata['uri'] ?? '');
         $stats = fstat($this->stream);
 
         if (isset($stats['size'])) {
@@ -220,7 +220,7 @@ class Stream implements StreamInterface
         return $result;
     }
 
-    public function getMetadata(?string $key = null)
+    public function getMetadata(?string $key = null): mixed
     {
         if (!isset($this->stream)) {
             return $key ?? [];
