@@ -1,10 +1,10 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace DvNet\DvNetClient;
 
-class HashManager
+class MerchantUtilsManager
 {
     /**
      * @api
@@ -12,6 +12,7 @@ class HashManager
      * @param string $clientSignature
      * @param string $clientKey
      * @param array<mixed, mixed> $requestBody
+     *
      * @return bool
      */
     public function checkSign(string $clientSignature, string $clientKey, array|object|string $requestBody): bool
@@ -23,5 +24,10 @@ class HashManager
         $hash = hash('sha256', $stringBody . $clientKey);
 
         return hash_equals($clientSignature, $hash);
+    }
+
+    public function generateLink(string $host, string $storeUuid, string $clientId, string $email): string
+    {
+        return $host . '/' . $storeUuid . '/' . $clientId . '?' . http_build_query(['email' => $email]);
     }
 }
