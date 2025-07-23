@@ -249,7 +249,7 @@ class MerchantClient
     {
         [$host, $xApiKey] = $this->getActualRequestParams(xApiKey: $xApiKey, host: $host);
         $data = $this->sendRequest(
-            method: 'GET',
+            method: 'DELETE',
             uri: $host . '/api/v1/external/withdrawal-from-processing/' . $id,
             headers: ['x-api-key' => $xApiKey],
         );
