@@ -245,14 +245,20 @@ class MerchantClient
     /**
      * @throws DvNetException
      */
-    public function deleteWithdrawalFromProcessing(string $id, ?string $xApiKey = null, ?string $host = null): void
+    public function deleteWithdrawalFromProcessing(string $id, ?string $xApiKey = null, ?string $host = null): string
     {
         [$host, $xApiKey] = $this->getActualRequestParams(xApiKey: $xApiKey, host: $host);
-        $this->sendRequest(
-            method: 'GET',
+        $data = $this->sendRequest(
+            method: 'DELETE',
             uri: $host . '/api/v1/external/withdrawal-from-processing/' . $id,
             headers: ['x-api-key' => $xApiKey],
         );
+
+        if (!is_string($data)) {
+            throw new DvNetInvalidResponseDataException(message: 'Invalid data');
+        }
+
+        return $data;
     }
 
     /**
@@ -308,8 +314,8 @@ class MerchantClient
             throw new DvNetInvalidResponseDataException('Invalid json.', previous: $exception);
         }
 
-        if (!is_array($json) || !array_key_exists('data', $json)) {
-            throw new DvNetInvalidResponseDataException('The response does not contain an data.');
+        if (!is_array($json) || !isset($json['data'])) {
+            throw new DvNetInvalidResponseDataException('The response does not contain an array of data.');
         }
 
         return $json['data'];
