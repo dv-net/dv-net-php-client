@@ -140,12 +140,10 @@ class WebhookMapper
     {
         return new WithdrawalWebhookResponse(
             type: $data['type'],
-            status: $data['status'],
             createdAt: new DateTimeImmutable($data['created_at']),
             paidAt: new DateTimeImmutable($data['paid_at']),
             amount: $data['amount'],
             transactions: $this->makeTransaction($data['transactions']),
-            wallet: $this->makeWallet($data['wallet']),
             withdrawalId: $data['withdrawal_id'],
         );
     }
