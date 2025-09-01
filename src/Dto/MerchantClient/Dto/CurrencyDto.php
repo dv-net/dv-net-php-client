@@ -13,6 +13,7 @@ class CurrencyDto
         public readonly string $contractAddress,
         public readonly bool $hasBalance,
         public readonly IconDto $icon,
+        public readonly IconDto $blockchainIcon,
         public readonly bool $isFiat,
         public readonly int $minConfirmation,
         public readonly string $name,
