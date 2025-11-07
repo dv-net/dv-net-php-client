@@ -12,7 +12,7 @@ class UnconfirmedTransactionDto
         public readonly string $id,
         public readonly string $txHash,
         public readonly string $toAddress,
-        public readonly string $bcUniqKey,
+        public readonly ?string $bcUniqKey,
         public readonly DateTimeImmutable $createdAt,
         public readonly string $currencyId,
         public readonly string $blockchain,
