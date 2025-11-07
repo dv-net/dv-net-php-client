@@ -17,6 +17,7 @@ use DvNet\DvNetClient\Dto\MerchantClient\Dto\IconDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\ProcessingWalletBalanceDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\TransferDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\TronDataDto;
+use DvNet\DvNetClient\Dto\MerchantClient\Dto\UnconfirmedTransactionDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrencyRateResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ExternalAddressesResponse;
@@ -145,6 +146,22 @@ use Throwable;
  *      stage: string,
  *      status: string,
  *  }
+ *
+ * @phpstan-type UnconfirmedTransaction = array{
+ *     amount: "0",
+ *     amount_usd: "0"|null,
+ *     bc_uniq_key: "string",
+ *     blockchain: "string",
+ *     created_at: "2025-11-07T06:10:49.104Z",
+ *     currency_id: "string",
+ *     from_address: "string",
+ *     id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+ *     network_created_at: "2025-11-07T06:10:49.104Z",
+ *     to_address: "string",
+ *     tx_hash: "string",
+ *     type: "string",
+ *     updated_at: "2025-11-07T06:10:49.104Z"
+ * }
  */
 class MerchantMapper
 {
@@ -507,6 +524,32 @@ class MerchantMapper
                 count: $data['count'],
                 countWithBalance: $data['count_with_balance'],
                 currency: $this->makeCurrencyShort($data['currency']),
+            );
+        } catch (Throwable $exception) {
+            throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);
+        }
+    }
+
+    /**
+     * @param UnconfirmedTransaction $data
+     *
+     * @return UnconfirmedTransactionDto
+     */
+    public function makeUnconfirmedTransfer(array $data): UnconfirmedTransactionDto
+    {
+        try {
+            return new UnconfirmedTransactionDto(
+                id: $data['id'],
+                txHash: $data['tx_hash'],
+                toAddress: $data['to_address'],
+                bcUniqKey: $data['bc_uniq_key'],
+                createdAt: new DateTimeImmutable($data['created_at']),
+                currencyId: $data['currency_id'],
+                blockchain: $data['blockchain'],
+                amount: $data['amount'],
+                amountUsd: $data['amount_usd'] ?? null,
+                networkCreatedAt: new DateTimeImmutable($data['network_created_at']),
+                type: $data['type'],
             );
         } catch (Throwable $exception) {
             throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);

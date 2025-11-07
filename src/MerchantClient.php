@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace DvNet\DvNetClient;
 
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\AccountDto;
+use DvNet\DvNetClient\Dto\MerchantClient\Dto\UnconfirmedTransactionDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrencyRateResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ExternalAddressesResponse;
@@ -40,6 +41,7 @@ use Throwable;
  * @psalm-import-type ProcessingWithdrawal from MerchantMapper
  * @psalm-import-type Withdrawal from MerchantMapper
  * @psalm-import-type Account from MerchantMapper
+ * @psalm-import-type UnconfirmedTransaction from MerchantMapper
  */
 class MerchantClient
 {
@@ -253,6 +255,22 @@ class MerchantClient
             uri: $host . '/api/v1/external/withdrawal-from-processing/' . $id,
             headers: ['x-api-key' => $xApiKey],
         );
+    }
+
+    /**
+     * @return UnconfirmedTransactionDto[]
+     */
+    public function getUnconfirmedTransactions(?string $xApiKey = null, ?string $host = null): array
+    {
+        [$host, $xApiKey] = $this->getActualRequestParams(xApiKey: $xApiKey, host: $host);
+        $data = $this->sendRequest(
+            method: 'GET',
+            uri: $host . '/api/v1/external/transactions/unconfirmed/transfer',
+            headers: ['x-api-key' => $xApiKey],
+        );
+
+        /** @var UnconfirmedTransaction[] $data */
+        return array_map(callback: [$this->merchantMapper, 'makeUnconfirmedTransfer'], array: $data);
     }
 
     /**
