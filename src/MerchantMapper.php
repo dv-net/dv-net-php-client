@@ -41,6 +41,8 @@ use Throwable;
  *       code: string,
  *       name: string,
  *       blockchain: string,
+ *       is_native: bool,
+ *       contract_address: string,
  *   }
  * @psalm-type Withdrawal = array{
  *      address_from: string,
@@ -314,6 +316,8 @@ class MerchantMapper
                 code: $data['code'],
                 name: $data['name'],
                 blockchain: $data['blockchain'],
+                isNative: $data['is_native'],
+                contractAddress: $data['contract_address'],
             );
         } catch (Throwable $exception) {
             throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);

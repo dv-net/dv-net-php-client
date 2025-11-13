@@ -11,6 +11,8 @@ class CurrencyShortDto
         public readonly string $code,
         public readonly string $name,
         public readonly string $blockchain,
+        public readonly bool $isNative,
+        public readonly string $contractAddress,
     ) {
     }
 }
