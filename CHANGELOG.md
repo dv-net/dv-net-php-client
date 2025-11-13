@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- is_native and contract_address fields in hot wallets endpoint
+
 ## [0.9.5] - 2025-11-07
 
 - Provide unconfirmed transactions route
