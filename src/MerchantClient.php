@@ -8,6 +8,7 @@ use DvNet\DvNetClient\Dto\MerchantClient\Dto\AccountDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\UnconfirmedTransactionDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrencyRateResponse;
+use DvNet\DvNetClient\Dto\MerchantClient\Response\ExtendedCurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ExternalAddressesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ProcessingWalletsBalancesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ProcessingWithdrawalResponse;
@@ -37,6 +38,9 @@ use Throwable;
  * @psalm-import-type ExternalWallet from MerchantMapper
  * @psalm-import-type ProcessingWalletBalance from MerchantMapper
  * @psalm-import-type Currency from MerchantMapper
+ * @psalm-import-type ExtendedCurrency from MerchantMapper
+ * @psalm-import-type Token from MerchantMapper
+ * @psalm-import-type Blockchain from MerchantMapper
  * @psalm-import-type CurrencyRate from MerchantMapper
  * @psalm-import-type ProcessingWithdrawal from MerchantMapper
  * @psalm-import-type Withdrawal from MerchantMapper
@@ -146,6 +150,30 @@ class MerchantClient
 
         /** @var Currency[] $data */
         return $this->merchantMapper->makeCurrencies($data);
+    }
+
+    /**
+     * @throws DvNetException
+     *
+     * @api
+     */
+    public function getStoreExtendedCurrencies(
+        ?string $xApiKey = null,
+        ?string $host = null,
+    ): ExtendedCurrenciesResponse {
+        [$host, $xApiKey] = $this->getActualRequestParams(xApiKey: $xApiKey, host: $host);
+        $data = $this->sendRequest(
+            method: 'GET',
+            uri: $host . '/api/v1/external/store/currencies-extended',
+            headers: ['x-api-key' => $xApiKey],
+        );
+
+        /** @var array{
+         *  tokens: Token[],
+         *  blockchains: Blockchain[],
+         *  currencies: ExtendedCurrency[]
+         * } $data */
+        return $this->merchantMapper->makeExtendedCurrencies($data);
     }
 
     /**

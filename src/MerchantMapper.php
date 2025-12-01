@@ -10,16 +10,20 @@ use DvNet\DvNetClient\Dto\MerchantClient\Dto\AddressDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\AssetDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\BalanceDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\BlockchainAdditionalDataDto;
+use DvNet\DvNetClient\Dto\MerchantClient\Dto\BlockchainDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\CurrencyDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\CurrencyShortDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\ExchangeBalanceDto;
+use DvNet\DvNetClient\Dto\MerchantClient\Dto\ExtendedCurrencyDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\IconDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\ProcessingWalletBalanceDto;
+use DvNet\DvNetClient\Dto\MerchantClient\Dto\TokenDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\TransferDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\TronDataDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\UnconfirmedTransactionDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrencyRateResponse;
+use DvNet\DvNetClient\Dto\MerchantClient\Response\ExtendedCurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ExternalAddressesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ProcessingWalletsBalancesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ProcessingWithdrawalResponse;
@@ -119,6 +123,31 @@ use Throwable;
  *      status: bool,
  *      withdrawal_min_balance: string,
  *      explorer_link: string,
+ *  }
+ * @psalm-type ExtendedCurrency = array{
+ *      id: string,
+ *      code: string,
+ *      name: string,
+ *      blockchain: string,
+ *      contract_address: string,
+ *      has_balance: bool,
+ *      min_confirmation: int,
+ *      icon: Icon,
+ *      token_icon: Icon,
+ *      blockchain_icon: Icon,
+ *      explorer_link: string,
+ *  }
+ * @psalm-type Blockchain = array{
+ *      name: string,
+ *      icon: Icon,
+ *      currencies: string[],
+ *      tokens: string[],
+ *  }
+ * @psalm-type Token = array{
+ *      name: string,
+ *      icon: Icon,
+ *      currencies: string[],
+ *      blockchains: string[],
  *  }
  * @psalm-type Icon = array{
  *      icon_128: string,
@@ -374,6 +403,92 @@ class MerchantMapper
     {
         try {
             return new CurrenciesResponse(array_map(callback: [$this, 'makeCurrency'], array: $data));
+        } catch (Throwable $exception) {
+            throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);
+        }
+    }
+
+    /**
+     * @param array{
+     *     tokens: Token[],
+     *     blockchains: Blockchain[],
+     *     currencies: ExtendedCurrency[]
+     * } $data
+     *
+     * @throws DvNetInvalidResponseDataException
+     */
+    public function makeExtendedCurrencies(array $data): ExtendedCurrenciesResponse
+    {
+        try {
+            return new ExtendedCurrenciesResponse(
+                tokens: array_map(callback: [$this, 'makeToken'], array: $data['tokens']),
+                blockchains: array_map(callback: [$this, 'makeBlockchain'], array: $data['blockchains']),
+                currencies: array_map(callback: [$this, 'makeExtendedCurrency'], array: $data['currencies']),
+            );
+        } catch (Throwable $exception) {
+            throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);
+        }
+    }
+
+    /**
+     * @param Token $data
+     *
+     * @throws DvNetInvalidResponseDataException
+     */
+    public function makeToken(array $data): TokenDto
+    {
+        try {
+            return new TokenDto(
+                name: $data['name'],
+                icon: $this->makeIcon($data['icon']),
+                currencies: $data['currencies'],
+                blockchains: $data['blockchains'],
+            );
+        } catch (Throwable $exception) {
+            throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);
+        }
+    }
+
+    /**
+     * @param Blockchain $data
+     *
+     * @throws DvNetInvalidResponseDataException
+     */
+    public function makeBlockchain(array $data): BlockchainDto
+    {
+        try {
+            return new BlockchainDto(
+                name: $data['name'],
+                icon: $this->makeIcon($data['icon']),
+                currencies: $data['currencies'],
+                tokens: $data['tokens'],
+            );
+        } catch (Throwable $exception) {
+            throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);
+        }
+    }
+
+    /**
+     * @param ExtendedCurrency $data
+     *
+     * @throws DvNetInvalidResponseDataException
+     */
+    public function makeExtendedCurrency(array $data): ExtendedCurrencyDto
+    {
+        try {
+            return new ExtendedCurrencyDto(
+                id: $data['id'],
+                code: $data['code'],
+                name: $data['name'],
+                blockchain: $data['blockchain'],
+                contractAddress: $data['contract_address'],
+                hasBalance: $data['has_balance'],
+                minConfirmation: $data['min_confirmation'],
+                icon: $this->makeIcon($data['icon']),
+                tokenIcon: $this->makeIcon($data['token_icon']),
+                blockchainIcon: $this->makeIcon($data['blockchain_icon']),
+                explorerLink: $data['explorer_link'],
+            );
         } catch (Throwable $exception) {
             throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);
         }
