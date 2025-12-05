@@ -380,12 +380,12 @@ class MerchantClient
         match (true) {
             $response->getStatusCode() === 200 => null,
             $response->getStatusCode() >= 400 && $response->getStatusCode() < 500 => throw new DvNetNetworkException(
-                message: 'Client error, got response: ' . $response->getBody()->getContents() . ' and code ' . $response->getStatusCode(),
+                message: 'Client error, got response: ' . (string) $response->getBody() . ' and code ' . $response->getStatusCode(),
                 request: $request,
                 code: $response->getStatusCode(),
             ),
             $response->getStatusCode() >= 500 => throw new DvNetServerException(
-                message: 'Server error, got response: ' . $response->getBody()->getContents() . ' and code ' . $response->getStatusCode(),
+                message: 'Server error, got response: ' . (string) $response->getBody() . ' and code ' . $response->getStatusCode(),
                 request: $request,
                 code: $response->getStatusCode(),
             ),
