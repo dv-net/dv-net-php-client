@@ -173,7 +173,7 @@ class WebhookMapper
             type: $data['unconfirmed_type'],
             status: $data['unconfirmed_status'],
             createdAt: new DateTimeImmutable($data['unconfirmed_created_at']),
-            paidAt: new DateTimeImmutable($data['unconfirmed_paid_at']),
+            paidAt: isset($data['unconfirmed_paid_at']) ? new DateTimeImmutable($data['unconfirmed_paid_at']) : null,
             amount: $data['unconfirmed_amount'],
             transactions: $this->makeTransaction($data['unconfirmed_transactions'], 'unconfirmed_'),
             wallet: $this->makeWallet($data['unconfirmed_wallet'], 'unconfirmed_'),

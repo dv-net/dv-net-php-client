@@ -12,7 +12,7 @@ class UnconfirmedWebhookResponse
         public readonly string $type,
         public readonly string $status,
         public readonly DateTimeImmutable $createdAt,
-        public readonly DateTimeImmutable $paidAt,
+        public readonly ?DateTimeImmutable $paidAt,
         public readonly string $amount,
         public readonly TransactionDto $transactions,
         public readonly WalletDto $wallet,
