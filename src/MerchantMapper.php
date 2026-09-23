@@ -21,6 +21,7 @@ use DvNet\DvNetClient\Dto\MerchantClient\Dto\TokenDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\TransferDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\TronDataDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\UnconfirmedTransactionDto;
+use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesRatesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrencyRateResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ExtendedCurrenciesResponse;
@@ -157,6 +158,7 @@ use Throwable;
  * @psalm-type CurrencyRate = array{
  *      code: string,
  *      rate: string,
+ *      original_rate: string,
  *      rate_source: string,
  *  }
  * @psalm-type ProcessingWithdrawal = array{
@@ -542,6 +544,20 @@ class MerchantMapper
     }
 
     /**
+     * @param CurrencyRate[] $data
+     *
+     * @throws DvNetInvalidResponseDataException
+     */
+    public function makeCurrencyRates(array $data): CurrenciesRatesResponse
+    {
+        try {
+            return new CurrenciesRatesResponse(array_map(callback: [$this, 'makeCurrencyRate'], array: $data));
+        } catch (Throwable $exception) {
+            throw new DvNetInvalidResponseDataException(message: 'Invalid data', previous: $exception);
+        }
+    }
+
+    /**
      * @param CurrencyRate $data
      *
      * @throws DvNetInvalidResponseDataException
@@ -552,6 +568,7 @@ class MerchantMapper
             return new CurrencyRateResponse(
                 code: $data['code'],
                 rate: $data['rate'],
+                originalRate: $data['original_rate'],
                 rateSource: $data['rate_source'],
             );
         } catch (Throwable $exception) {

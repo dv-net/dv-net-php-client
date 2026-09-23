@@ -9,6 +9,7 @@ class CurrencyRateResponse
     public function __construct(
         public readonly string $code,
         public readonly string $rate,
+        public readonly string $originalRate,
         public readonly string $rateSource,
     ) {
     }

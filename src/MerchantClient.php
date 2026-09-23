@@ -6,8 +6,8 @@ namespace DvNet\DvNetClient;
 
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\AccountDto;
 use DvNet\DvNetClient\Dto\MerchantClient\Dto\UnconfirmedTransactionDto;
+use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesRatesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrenciesResponse;
-use DvNet\DvNetClient\Dto\MerchantClient\Response\CurrencyRateResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ExtendedCurrenciesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ExternalAddressesResponse;
 use DvNet\DvNetClient\Dto\MerchantClient\Response\ProcessingWalletsBalancesResponse;
@@ -181,20 +181,19 @@ class MerchantClient
      *
      * @api
      */
-    public function getStoreCurrencyRate(
-        string $currencyId,
+    public function getStoreCurrenciesRates(
         ?string $xApiKey = null,
         ?string $host = null,
-    ): CurrencyRateResponse {
+    ): CurrenciesRatesResponse {
         [$host, $xApiKey] = $this->getActualRequestParams(xApiKey: $xApiKey, host: $host);
         $data = $this->sendRequest(
             method: 'GET',
-            uri: $host . "/api/v1/external/store/currencies/{$currencyId}/rate",
+            uri: $host . '/api/v1/external/store/currencies/rate',
             headers: ['x-api-key' => $xApiKey],
         );
 
-        /** @var CurrencyRate $data */
-        return $this->merchantMapper->makeCurrencyRate($data);
+        /** @var CurrencyRate[] $data */
+        return $this->merchantMapper->makeCurrencyRates($data);
     }
 
     /**
