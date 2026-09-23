@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.9.8] - 2026-09-23
+
+- Replace single-currency rate with bulk `GET /store/currencies/rate` (`getStoreCurrenciesRates`) and include `original_rate` alongside scale-adjusted `rate`
+
 ## [0.9.7] - 2025-12-05
 
 - Reading response body with rewinding

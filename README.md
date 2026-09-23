@@ -93,15 +93,15 @@ $currencies = $client->getStoreCurrencies(
 // Returns CurrenciesResponse object with detailed currency information
 ```
 
-### Store Currency Rate
-Get current exchange rate for a specific currency:
+### Store Currencies Rates
+Get exchange rates for all currencies enabled on the store.
+`rate` is scale-adjusted; `originalRate` is the source rate without store `rate_scale`:
 
 ```php
-$rate = $client->getStoreCurrencyRate(
-    xApiKey: 'your-api-key',
-    currencyId: 'BTC'
+$rates = $client->getStoreCurrenciesRates(
+    xApiKey: 'your-api-key'
 );
-// Returns CurrencyRate object with current rate and source information
+// Returns CurrenciesRatesResponse with rate, originalRate and source for each currency
 ```
 
 ### Withdrawal Processing Status
